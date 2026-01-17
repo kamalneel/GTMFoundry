@@ -1,0 +1,458 @@
+@import "tailwindcss";
+
+/* ============================================
+   GTM Foundry Design System
+   ============================================ */
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ============================================
+   CSS Custom Properties
+   ============================================ */
+
+:root {
+  /* Brand Colors (Green - Growth/GTM Success) */
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+  --color-brand-900: #14532d;
+  --color-brand-950: #052e16;
+
+  /* Agent Colors */
+  --color-agent-data: #3b82f6;        /* Blue - Central hub, trust */
+  --color-agent-import: #f59e0b;      /* Amber - Incoming data */
+  --color-agent-enrichment: #8b5cf6;  /* Purple - Enhancement */
+  --color-agent-demandgen: #f43f5e;   /* Rose - Outreach energy */
+  --color-agent-website: #06b6d4;     /* Cyan - Digital/web */
+  --color-agent-assistant: #10b981;   /* Emerald - Human support */
+  --color-agent-analytics: #6366f1;   /* Indigo - Insights */
+
+  /* Surface Colors (Dark Theme) */
+  --color-surface: #0f0f0f;
+  --color-surface-elevated: #1a1a1a;
+  --color-surface-hover: #252525;
+  --color-border: #2a2a2a;
+  --color-border-light: #3a3a3a;
+
+  /* Text Colors */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+
+  /* Status Colors */
+  --color-status-active: #4ade80;
+  --color-status-pending: #fbbf24;
+  --color-status-completed: #818cf8;
+  --color-status-error: #f87171;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace font for code/IDs */
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ============================================
+   Agent Badge Gradients
+   ============================================ */
+
+.agent-data { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.agent-import { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.agent-enrichment { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.agent-demandgen { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
+.agent-website { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+.agent-assistant { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.agent-analytics { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+
+/* ============================================
+   Agent Glow Effects
+   ============================================ */
+
+.glow-data { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+.glow-import { box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
+.glow-enrichment { box-shadow: 0 0 20px rgba(139, 92, 246, 0.15); }
+.glow-demandgen { box-shadow: 0 0 20px rgba(244, 63, 94, 0.15); }
+.glow-website { box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+.glow-assistant { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+.glow-analytics { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+
+/* ============================================
+   Gradient Utilities (for metric cards)
+   ============================================ */
+
+.gradient-brand { --gradient: linear-gradient(90deg, #22c55e 0%, #16a34a 100%); }
+.gradient-data { --gradient: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); }
+.gradient-import { --gradient: linear-gradient(90deg, #f59e0b 0%, #d97706 100%); }
+.gradient-enrichment { --gradient: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%); }
+.gradient-demandgen { --gradient: linear-gradient(90deg, #f43f5e 0%, #e11d48 100%); }
+.gradient-website { --gradient: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%); }
+.gradient-assistant { --gradient: linear-gradient(90deg, #10b981 0%, #059669 100%); }
+.gradient-analytics { --gradient: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); }
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* ============================================
+   Card Component
+   ============================================ */
+
+.card {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--color-border-light);
+  background: var(--color-surface-hover);
+}
+
+/* ============================================
+   Metric Card Component
+   ============================================ */
+
+.metric-card {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient);
+}
+
+/* ============================================
+   Navigation Item
+   ============================================ */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+  color: var(--color-brand-400);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* ============================================
+   Input Component
+   ============================================ */
+
+.input {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   Button Component
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   Badge Component
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Status Badges */
+.status-active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.status-completed {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.status-error {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.status-in-progress {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+/* ============================================
+   Table Component
+   ============================================ */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.table tr:hover td {
+  background: var(--color-surface-hover);
+}
+
+/* ============================================
+   Chat Message Component
+   ============================================ */
+
+.chat-message {
+  padding: 16px 20px;
+  border-radius: 12px;
+  max-width: 80%;
+}
+
+.chat-user {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  margin-left: auto;
+}
+
+.chat-agent {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+}
+
+/* ============================================
+   Background Pattern
+   ============================================ */
+
+.bg-pattern {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+}
+
+/* ============================================
+   Backdrop for Modals
+   ============================================ */
+
+.backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* ============================================
+   Utility: Line Clamp
+   ============================================ */
+
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
