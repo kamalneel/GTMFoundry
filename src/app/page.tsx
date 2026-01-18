@@ -12,9 +12,13 @@ import {
   Settings,
   HelpCircle,
   ChevronRight,
+  Bell,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { getActiveV1Agents } from '@/data/agents';
+import { getDashboardMetrics } from '@/actions/analytics';
+import { getUnreadCount } from '@/actions/notifications';
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -27,8 +31,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   const agents = getActiveV1Agents();
+  const [metrics, unreadNotifications] = await Promise.all([
+    getDashboardMetrics(),
+    getUnreadCount(),
+  ]);
 
   return (
     <div className="flex min-h-screen">
@@ -78,6 +86,15 @@ export default function DashboardPage() {
 
         {/* Bottom nav */}
         <div className="p-4 border-t border-zinc-800 space-y-1">
+          <Link href="/agents/assistant" className="nav-item relative">
+            <Bell className="w-5 h-5" />
+            <span>Notifications</span>
+            {unreadNotifications > 0 && (
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
+                {unreadNotifications > 9 ? '9+' : unreadNotifications}
+              </span>
+            )}
+          </Link>
           <Link href="/settings" className="nav-item">
             <Settings className="w-5 h-5" />
             <span>Settings</span>
@@ -103,26 +120,26 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
             title="Total Contacts"
-            value="0"
-            change="+0%"
+            value={metrics.contacts.total.toString()}
+            change={`+${metrics.contacts.newThisWeek} this week`}
             gradient="gradient-data"
           />
           <MetricCard
             title="Accounts"
-            value="0"
-            change="+0%"
+            value={metrics.accounts.total.toString()}
+            change={`+${metrics.accounts.newThisWeek} this week`}
             gradient="gradient-import"
           />
           <MetricCard
             title="Enriched"
-            value="0%"
-            change="+0%"
+            value={`${metrics.contacts.enrichmentRate}%`}
+            change={`${metrics.contacts.enriched}/${metrics.contacts.total} contacts`}
             gradient="gradient-enrichment"
           />
           <MetricCard
             title="Drafts Created"
-            value="0"
-            change="+0"
+            value={metrics.drafts.total.toString()}
+            change={`${metrics.drafts.approved} approved`}
             gradient="gradient-demandgen"
           />
         </div>
@@ -156,17 +173,72 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold text-white mb-4">
               Recent Imports
             </h3>
-            <div className="text-zinc-500 text-center py-8">
-              No imports yet. Upload a CSV to get started.
-            </div>
+            {metrics.imports.recentImports.length === 0 ? (
+              <div className="text-zinc-500 text-center py-8">
+                No imports yet. Upload a CSV to get started.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {metrics.imports.recentImports.map((imp) => (
+                  <div
+                    key={imp.id}
+                    className="flex items-center justify-between p-3 bg-zinc-800/30 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Upload className="w-4 h-4 text-agent-import" />
+                      <div>
+                        <p className="text-white text-sm">{imp.fileName}</p>
+                        <p className="text-zinc-500 text-xs">
+                          {new Date(imp.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-zinc-400 text-sm">{imp.rowCount} rows</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="card p-6">
             <h3 className="text-lg font-semibold text-white mb-4">
-              Recent Drafts
+              Draft Summary
             </h3>
-            <div className="text-zinc-500 text-center py-8">
-              No drafts yet. Enrich contacts and generate emails.
-            </div>
+            {metrics.drafts.total === 0 ? (
+              <div className="text-zinc-500 text-center py-8">
+                No drafts yet. Enrich contacts and generate emails.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-zinc-800/30 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-zinc-500" />
+                    <span className="text-zinc-400 text-sm">Total</span>
+                  </div>
+                  <p className="text-2xl font-bold text-white">{metrics.drafts.total}</p>
+                </div>
+                <div className="bg-zinc-800/30 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-amber-500" />
+                    <span className="text-zinc-400 text-sm">Pending</span>
+                  </div>
+                  <p className="text-2xl font-bold text-amber-500">{metrics.drafts.pending}</p>
+                </div>
+                <div className="bg-zinc-800/30 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-green-500" />
+                    <span className="text-zinc-400 text-sm">Approved</span>
+                  </div>
+                  <p className="text-2xl font-bold text-green-500">{metrics.drafts.approved}</p>
+                </div>
+                <div className="bg-zinc-800/30 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-red-500" />
+                    <span className="text-zinc-400 text-sm">Rejected</span>
+                  </div>
+                  <p className="text-2xl font-bold text-red-500">{metrics.drafts.rejected}</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -189,7 +261,7 @@ function MetricCard({
     <div className={`metric-card ${gradient}`}>
       <p className="text-zinc-400 text-sm mb-2">{title}</p>
       <p className="text-3xl font-bold text-white">{value}</p>
-      <p className="text-sm text-zinc-500 mt-2">{change} from last week</p>
+      <p className="text-sm text-zinc-500 mt-2">{change}</p>
     </div>
   );
 }
